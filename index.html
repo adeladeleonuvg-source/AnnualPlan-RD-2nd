@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colegio Montano - Annual Plan Dashboard 2027</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f6f9;
+            color: #1a202c;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Custom Colors based on Colegio Montano Palette */
+        .bg-cm-blue { background-color: #1F3C88; }
+        .text-cm-blue { color: #1F3C88; }
+        .border-cm-blue { border-color: #1F3C88; }
+
+        .bg-cm-secondary { background-color: #3F72AF; }
+        .text-cm-secondary { color: #3F72AF; }
+        .border-cm-secondary { border-color: #3F72AF; }
+
+        .bg-cm-yellow { background-color: #F2C94C; }
+        .text-cm-yellow { color: #F2C94C; }
+        .border-cm-yellow { border-color: #F2C94C; }
+
+        /* Custom Tab Styling */
+        .tab-btn {
+            background-color: #3F72AF;
+            color: #FFFFFF;
+            transition: all 0.25s ease;
+            font-style: italic;
+        }
+        
+        .tab-btn:hover {
+            background-color: #2c5282;
+        }
+
+        .tab-btn.active {
+            background-color: #F2C94C;
+            color: #1F3C88;
+            font-weight: 700;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Strict Italic Enforcement for Emphasis */
+        .italic-title {
+            font-style: italic;
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 12px rgba(31, 60, 136, 0.08);
+        }
+
+        /* Smooth tab content transitions */
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Custom Scrollbar for Content Tables */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3F72AF;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1F3C88;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-100" id="dashboard-root">
+
+    <!-- TOP HEADER / INSTITUTIONAL BAR -->
+    <header class="bg-cm-blue text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap justify-between items-center gap-4">
+            
+            <!-- Logo & Title Header -->
+            <div class="flex items-center space-x-4">
+                <img src="https://admisiones.colegiomontano.edu.gt/assets/img/logo-cm-blanco.webp" 
+                     alt="Colegio Montano Logo" 
+                     class="h-12 max-h-12 w-auto object-contain"
+                     onerror="this.onerror=null; this.src='https://placehold.co/180x50/1F3C88/FFFFFF?text=Colegio+Montano';">
+                
+                <div class="border-l-2 border-cm-secondary pl-4">
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-white leading-tight">
+                        <span class="italic-title">Annual Pedagogical Plan</span>
+                    </h1>
+                    <p class="text-xs sm:text-sm text-blue-200 font-light">
+                        <span class="italic-title">Colegio Montano Cortijo - Academic Cycle 2027</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Header Information Badges -->
+            <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
+                <div class="bg-blue-900/60 border border-blue-400/30 rounded-lg px-3 py-1.5">
+                    <span class="text-blue-200 block text-xs">Course / Subject</span>
+                    <span class="font-semibold text-white">Reading</span>
+                </div>
+                <div class="bg-blue-900/60 border border-blue-400/30 rounded-lg px-3 py-1.5">
+                    <span class="text-blue-200 block text-xs">Grade & Level</span>
+                    <span class="font-semibold text-white">2nd Grade - Elementary</span>
+                </div>
+                <div class="bg-blue-900/60 border border-blue-400/30 rounded-lg px-3 py-1.5">
+                    <span class="text-blue-200 block text-xs">Teacher</span>
+                    <span class="font-semibold text-white">Nicole De León</span>
+                </div>
+
+                <!-- Fullscreen Button -->
+                <button onclick="toggleFullScreen()" 
+                        class="bg-cm-yellow hover:bg-yellow-400 text-cm-blue font-bold px-3 py-2 rounded-lg shadow transition flex items-center gap-1.5 ml-2 cursor-pointer text-xs sm:text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                    </svg>
+                    <span class="italic-title">Full Screen</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- HORIZONTAL TABS NAVIGATION -->
+        <nav class="bg-cm-secondary px-4 sm:px-8 border-t border-blue-400/20 shadow-inner">
+            <div class="max-w-7xl mx-auto flex space-x-1 sm:space-x-2 overflow-x-auto py-2 scrollbar-none">
+                <button onclick="switchTab('tab-1')" id="btn-tab-1" class="tab-btn active px-4 py-2 rounded-lg text-xs sm:text-sm whitespace-nowrap font-medium">
+                    I) Course Description
+                </button>
+                <button onclick="switchTab('tab-2')" id="btn-tab-2" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm whitespace-nowrap font-medium">
+                    II) General Objectives
+                </button>
+                <button onclick="switchTab('tab-3')" id="btn-tab-3" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm whitespace-nowrap font-medium">
+                    III) Competencies
+                </button>
+                <button onclick="switchTab('tab-4')" id="btn-tab-4" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm whitespace-nowrap font-medium">
+                    IV) Achievement Indicators
+                </button>
+                <button onclick="switchTab('tab-5')" id="btn-tab-5" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm whitespace-nowrap font-medium">
+                    V) Didactic Methodology
+                </button>
+                <button onclick="switchTab('tab-6')" id="btn-tab-6" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm whitespace-nowrap font-medium">
+                    VI) Bibliography
+                </button>
+                <button onclick="switchTab('tab-7')" id="btn-tab-7" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm whitespace-nowrap font-medium">
+                    VII) Contents
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN DISPLAY AREA (PIZARRA DIGITAL) -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- TAB 1: COURSE DESCRIPTION -->
+        <section id="tab-1" class="tab-content active space-y-6">
+            <div class="bg-white rounded-xl p-6 sm:p-8 border-l-8 border-cm-blue card-shadow">
+                <h2 class="text-2xl font-bold text-cm-blue mb-4 border-b border-gray-200 pb-2 flex items-center gap-2">
+                    <span class="italic-title">I) Course Description</span>
+                </h2>
+                <div class="prose max-w-none text-gray-700 leading-relaxed text-base space-y-4">
+                    <p class="text-lg text-gray-800">
+                        This course provides an introduction to the basic elements of English grammar and writing skills. The course also includes active vocabulary that provides students with the necessary language to answer the topic questions that are presented and practiced. Many activities are set up in different ways, according to the needs of students and teachers.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <h3 class="text-cm-blue font-bold text-sm mb-1"><span class="italic-title">Core Area Purpose</span></h3>
+                            <p class="text-xs text-gray-600">Fostering functional literacy, sentence construction, and active communicative comprehension in early learners.</p>
+                        </div>
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <h3 class="text-cm-blue font-bold text-sm mb-1"><span class="italic-title">Reasoning & Expression</span></h3>
+                            <p class="text-xs text-gray-600">Developing logical sequencing, sentence structures, and oral confidence through guided reading contexts.</p>
+                        </div>
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <h3 class="text-cm-blue font-bold text-sm mb-1"><span class="italic-title">Institutional Values</span></h3>
+                            <p class="text-xs text-gray-600">Building autonomy, active participation, continuous effort, and respectful collaborative interaction.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: GENERAL OBJECTIVES -->
+        <section id="tab-2" class="tab-content space-y-6">
+            <div class="bg-white rounded-xl p-6 sm:p-8 border-l-8 border-cm-blue card-shadow">
+                <h2 class="text-2xl font-bold text-cm-blue mb-6 border-b border-gray-200 pb-2">
+                    <span class="italic-title">II) General Objectives</span>
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <div class="bg-gradient-to-br from-white to-slate-50 p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+                        <div class="w-10 h-10 bg-cm-secondary text-white rounded-full flex items-center justify-center font-bold text-lg mb-4">
+                            1
+                        </div>
+                        <h3 class="text-lg font-bold text-cm-blue mb-2"><span class="italic-title">Vocabulary Recognition</span></h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            Students will be able to recognize and identify vocabulary words within the context of a theme.
+                        </p>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-white to-slate-50 p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+                        <div class="w-10 h-10 bg-cm-secondary text-white rounded-full flex items-center justify-center font-bold text-lg mb-4">
+                            2
+                        </div>
+                        <h3 class="text-lg font-bold text-cm-blue mb-2"><span class="italic-title">Structural Application</span></h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            Students will be able to use words with the right structure and apply vocabulary words effectively in basic context.
+                        </p>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-white to-slate-50 p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+                        <div class="w-10 h-10 bg-cm-secondary text-white rounded-full flex items-center justify-center font-bold text-lg mb-4">
+                            3
+                        </div>
+                        <h3 class="text-lg font-bold text-cm-blue mb-2"><span class="italic-title">Self-Expression & Opinion</span></h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            Students will be able to tell self-experiences, recognize new words, give their opinion, and introduce a new topic confidently.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: COMPETENCIES -->
+        <section id="tab-3" class="tab-content space-y-6">
+            <div class="bg-white rounded-xl p-6 sm:p-8 border-l-8 border-cm-blue card-shadow">
+                
+                <h2 class="text-2xl font-bold text-cm-blue mb-6 border-b border-gray-200 pb-2">
+                    <span class="italic-title">III) Academic & Institutional Competencies</span>
+                </h2>
+
+                <!-- Academic Competencies from PDF -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-bold text-cm-secondary mb-4 flex items-center gap-2">
+                        <span class="w-3 h-3 bg-cm-secondary rounded-full inline-block"></span>
+                        <span class="italic-title">Academic Subject Competencies</span>
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-cm-secondary text-gray-700 text-sm">
+                            <span class="italic-title">Students develop a greater ability to understand and use English in basic communicative situations. They demonstrate comprehension of short oral instructions, questions, and written messages through appropriate actions and responses.</span>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-cm-secondary text-gray-700 text-sm">
+                            <span class="italic-title">Learners express themselves using familiar vocabulary, short phrases, and simple sentences related to everyday contexts.</span>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-cm-secondary text-gray-700 text-sm">
+                            <span class="italic-title">They apply basic grammatical structures and clear pronunciation to communicate ideas, needs, and feelings effectively.</span>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-cm-secondary text-gray-700 text-sm">
+                            <span class="italic-title">Reading and writing are used as support to reinforce vocabulary and sentence construction. These competencies promote confidence and fluency in the continued development of oral and written communication in English at an elementary level.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mandatory CM Institutional Competencies -->
+                <div>
+                    <h3 class="text-lg font-bold text-cm-blue mb-4 flex items-center gap-2">
+                        <span class="w-3 h-3 bg-cm-yellow rounded-full inline-block"></span>
+                        <span class="italic-title">Institutional CM Competencies (Competencias CM & Soft Skills)</span>
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        
+                        <div class="p-3.5 bg-yellow-50/60 border border-yellow-200 rounded-lg">
+                            <span class="text-xs font-bold text-cm-blue block mb-1"><span class="italic-title">Critical Thinking & Problem Solving</span></span>
+                            <p class="text-xs text-gray-600">Evaluate diverse scenarios, resolve case studies, and promote proactive responses.</p>
+                        </div>
+
+                        <div class="p-3.5 bg-yellow-50/60 border border-yellow-200 rounded-lg">
+                            <span class="text-xs font-bold text-cm-blue block mb-1"><span class="italic-title">Collaboration & Teamwork</span></span>
+                            <p class="text-xs text-gray-600">Work in groups with defined roles under the principle "all for one and one for all."</p>
+                        </div>
+
+                        <div class="p-3.5 bg-yellow-50/60 border border-yellow-200 rounded-lg">
+                            <span class="text-xs font-bold text-cm-blue block mb-1"><span class="italic-title">Digital Competencies</span></span>
+                            <p class="text-xs text-gray-600">Utilize interactive platforms and digital learning tools safely and productively.</p>
+                        </div>
+
+                        <div class="p-3.5 bg-yellow-50/60 border border-yellow-200 rounded-lg">
+                            <span class="text-xs font-bold text-cm-blue block mb-1"><span class="italic-title">Effective Communication</span></span>
+                            <p class="text-xs text-gray-600">Express needs, feelings, and ideas using appropriate oral and written English structures.</p>
+                        </div>
+
+                        <div class="p-3.5 bg-yellow-50/60 border border-yellow-200 rounded-lg">
+                            <span class="text-xs font-bold text-cm-blue block mb-1"><span class="italic-title">Creativity & Innovation</span></span>
+                            <p class="text-xs text-gray-600">Create engaging visual and oral presentations that synergize diverse individual ideas.</p>
+                        </div>
+
+                        <div class="p-3.5 bg-yellow-50/60 border border-yellow-200 rounded-lg">
+                            <span class="text-xs font-bold text-cm-blue block mb-1"><span class="italic-title">Autonomous Learning & Adaptability</span></span>
+                            <p class="text-xs text-gray-600">Demonstrate cognitive flexibility, adapting to varied learning tasks and pre-reading habits.</p>
+                        </div>
+
+                        <div class="p-3.5 bg-yellow-50/60 border border-yellow-200 rounded-lg">
+                            <span class="text-xs font-bold text-cm-blue block mb-1"><span class="italic-title">Global & Cultural Awareness</span></span>
+                            <p class="text-xs text-gray-600">Explore international contexts, global habitats, traditions, and multicultural art forms.</p>
+                        </div>
+
+                        <div class="p-3.5 bg-yellow-50/60 border border-yellow-200 rounded-lg">
+                            <span class="text-xs font-bold text-cm-blue block mb-1"><span class="italic-title">Ethics & Digital Citizenship</span></span>
+                            <p class="text-xs text-gray-600">Uphold values of honesty, respect, and positive interaction in classroom and digital environments.</p>
+                        </div>
+
+                        <div class="p-3.5 bg-yellow-50/60 border border-yellow-200 rounded-lg">
+                            <span class="text-xs font-bold text-cm-blue block mb-1"><span class="italic-title">Emotional Management & Resilience</span></span>
+                            <p class="text-xs text-gray-600">Resolve conflicts with empathy, seeking first to understand, then to be understood.</p>
+                        </div>
+
+                        <div class="p-3.5 bg-yellow-50/60 border border-yellow-200 rounded-lg">
+                            <span class="text-xs font-bold text-cm-blue block mb-1"><span class="italic-title">Ecological Awareness & Sustainability</span></span>
+                            <p class="text-xs text-gray-600">Understand environmental protection through unit topics such as "Dog Helps the Planet."</p>
+                        </div>
+
+                        <div class="p-3.5 bg-yellow-50/60 border border-yellow-200 rounded-lg md:col-span-2 lg:col-span-2">
+                            <span class="text-xs font-bold text-cm-blue block mb-1"><span class="italic-title">Leadership Role Performance</span></span>
+                            <p class="text-xs text-gray-600">Align student habits with self-leadership, taking accountability in classroom roles and group tasks.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 4: ACHIEVEMENT INDICATORS -->
+        <section id="tab-4" class="tab-content space-y-6">
+            <div class="bg-white rounded-xl p-6 sm:p-8 border-l-8 border-cm-blue card-shadow">
+                <h2 class="text-2xl font-bold text-cm-blue mb-6 border-b border-gray-200 pb-2">
+                    <span class="italic-title">IV) Achievement Indicators</span>
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-lg border border-gray-200">
+                        <span class="text-cm-yellow bg-cm-blue rounded-full p-1 mt-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </span>
+                        <p class="text-sm text-gray-700 leading-snug">
+                            <span class="italic-title">Demonstrates understanding of simple oral instructions and classroom directions given in English.</span>
+                        </p>
+                    </div>
+
+                    <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-lg border border-gray-200">
+                        <span class="text-cm-yellow bg-cm-blue rounded-full p-1 mt-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </span>
+                        <p class="text-sm text-gray-700 leading-snug">
+                            <span class="italic-title">Recognizes and produces English sounds and words with clear and comprehensible pronunciation.</span>
+                        </p>
+                    </div>
+
+                    <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-lg border border-gray-200">
+                        <span class="text-cm-yellow bg-cm-blue rounded-full p-1 mt-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </span>
+                        <p class="text-sm text-gray-700 leading-snug">
+                            <span class="italic-title">Reads and interprets short, familiar words and simple sentences, responding accurately to written commands.</span>
+                        </p>
+                    </div>
+
+                    <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-lg border border-gray-200">
+                        <span class="text-cm-yellow bg-cm-blue rounded-full p-1 mt-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </span>
+                        <p class="text-sm text-gray-700 leading-snug">
+                            <span class="italic-title">Participates in guided dialogues by asking and answering simple questions using known vocabulary and structures.</span>
+                        </p>
+                    </div>
+
+                    <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-lg border border-gray-200">
+                        <span class="text-cm-yellow bg-cm-blue rounded-full p-1 mt-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </span>
+                        <p class="text-sm text-gray-700 leading-snug">
+                            <span class="italic-title">Expresses basic needs, ideas, and feelings through short oral statements or phrases in English.</span>
+                        </p>
+                    </div>
+
+                    <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-lg border border-gray-200">
+                        <span class="text-cm-yellow bg-cm-blue rounded-full p-1 mt-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </span>
+                        <p class="text-sm text-gray-700 leading-snug">
+                            <span class="italic-title">Applies verbal and non-verbal communication strategies to support comprehension and expression.</span>
+                        </p>
+                    </div>
+
+                    <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-lg border border-gray-200">
+                        <span class="text-cm-yellow bg-cm-blue rounded-full p-1 mt-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </span>
+                        <p class="text-sm text-gray-700 leading-snug">
+                            <span class="italic-title">Identifies and uses vocabulary related to familiar contexts such as school, home, body parts, colors, animals, and everyday objects.</span>
+                        </p>
+                    </div>
+
+                    <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-lg border border-gray-200">
+                        <span class="text-cm-yellow bg-cm-blue rounded-full p-1 mt-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </span>
+                        <p class="text-sm text-gray-700 leading-snug">
+                            <span class="italic-title">Engages in brief communicative exchanges demonstrating confidence and a positive attitude toward learning English.</span>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: MÉTODOS DIDÁCTICOS (INSTITUTIONAL DOUBLE PERIOD - 70 MIN) -->
+        <section id="tab-5" class="tab-content space-y-6">
+            <div class="bg-white rounded-xl p-6 sm:p-8 border-l-8 border-cm-blue card-shadow">
+                <h2 class="text-2xl font-bold text-cm-blue mb-2 border-b border-gray-200 pb-2">
+                    <span class="italic-title">V) Institutional Didactic Methodology</span>
+                </h2>
+                <p class="text-sm text-cm-secondary mb-6"><span class="italic-title">Active-Collaborative Model & Double Period Method (70 Minutes)</span></p>
+
+                <!-- 70-Minute Structure -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    
+                    <div class="bg-blue-50 border-t-4 border-cm-blue p-4 rounded-b-xl shadow-sm">
+                        <span class="text-xs font-bold uppercase tracking-wider text-cm-secondary block mb-1"><span class="italic-title">Moment 1</span></span>
+                        <h3 class="text-base font-bold text-cm-blue mb-2"><span class="italic-title">Motivating Introduction</span></h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            Activation of prior knowledge, icebreakers, warm-up games, dynamic questioning, and brainstorming sessions.
+                        </p>
+                    </div>
+
+                    <div class="bg-blue-50 border-t-4 border-cm-secondary p-4 rounded-b-xl shadow-sm">
+                        <span class="text-xs font-bold uppercase tracking-wider text-cm-secondary block mb-1"><span class="italic-title">Moment 2</span></span>
+                        <h3 class="text-base font-bold text-cm-blue mb-2"><span class="italic-title">Individual Work</span></h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            Development of individual skills, silent reading, personal reflection, and tailored written execution.
+                        </p>
+                    </div>
+
+                    <div class="bg-blue-50 border-t-4 border-cm-yellow p-4 rounded-b-xl shadow-sm">
+                        <span class="text-xs font-bold uppercase tracking-wider text-cm-blue block mb-1"><span class="italic-title">Moment 3</span></span>
+                        <h3 class="text-base font-bold text-cm-blue mb-2"><span class="italic-title">Teamwork</span></h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            Structured group interaction with assigned roles adhering to the motto <span class="italic-title">"all for one and one for all."</span>
+                        </p>
+                    </div>
+
+                    <div class="bg-blue-50 border-t-4 border-cm-blue p-4 rounded-b-xl shadow-sm">
+                        <span class="text-xs font-bold uppercase tracking-wider text-cm-secondary block mb-1"><span class="italic-title">Moment 4</span></span>
+                        <h3 class="text-base font-bold text-cm-blue mb-2"><span class="italic-title">Plenary & Debrief</span></h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            Public presentation, Socratic dialogue, sharing synthesis, and preparation for home pre-reading.
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- Core Methodologies -->
+                <div class="bg-slate-50 p-5 rounded-xl border border-gray-200">
+                    <h3 class="text-base font-bold text-cm-blue mb-3"><span class="italic-title">Core Key Pedagogical Pillars</span></h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm text-gray-700">
+                        <div class="flex items-start gap-2">
+                            <span class="text-cm-secondary font-bold">•</span>
+                            <div>
+                                <span class="font-bold text-cm-blue"><span class="italic-title">Project-Based Learning (PBL):</span></span>
+                                <span> Applied projects integrating real-world situations and practical vocabulary application.</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-cm-secondary font-bold">•</span>
+                            <div>
+                                <span class="font-bold text-cm-blue"><span class="italic-title">Constructivism:</span></span>
+                                <span> Encouraging reflection, guided discovery, active reasoning, and knowledge building.</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-cm-secondary font-bold">•</span>
+                            <div>
+                                <span class="font-bold text-cm-blue"><span class="italic-title">Flipped Classroom:</span></span>
+                                <span> Empowering self-directed home reading to maximize interactive classroom time.</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-cm-secondary font-bold">•</span>
+                            <div>
+                                <span class="font-bold text-cm-blue"><span class="italic-title">Case Studies & Habit Leadership:</span></span>
+                                <span> Alignment with self-leadership habits and real-life scenario analysis.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 6: BIBLIOGRAPHY -->
+        <section id="tab-6" class="tab-content space-y-6">
+            <div class="bg-white rounded-xl p-6 sm:p-8 border-l-8 border-cm-blue card-shadow">
+                <h2 class="text-2xl font-bold text-cm-blue mb-6 border-b border-gray-200 pb-2">
+                    <span class="italic-title">VI) Bibliography & Didactic Resources</span>
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-5 border border-blue-200 rounded-xl bg-gradient-to-br from-blue-50/50 to-white">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="p-2 bg-cm-blue text-white rounded-lg">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-cm-blue"><span class="italic-title">Official Textbook & Workbook</span></h3>
+                                <p class="text-xs text-gray-500">Main Subject Material</p>
+                            </div>
+                        </div>
+                        <ul class="text-sm text-gray-700 space-y-2 pl-2">
+                            <li class="flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 bg-cm-secondary rounded-full"></span>
+                                <span class="italic-title">National Geographic Learning: Our World (Second Edition)</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 bg-cm-secondary rounded-full"></span>
+                                <span class="italic-title">Level 2 Student's Book (SB) & Workbook (WB)</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="p-5 border border-blue-200 rounded-xl bg-gradient-to-br from-blue-50/50 to-white">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="p-2 bg-cm-secondary text-white rounded-lg">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-cm-blue"><span class="italic-title">Digital Learning Platform</span></h3>
+                                <p class="text-xs text-gray-500">Online Interactive Resources</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-700 mb-2">
+                            <span class="italic-title">ELT National Geographic Learning Portal:</span>
+                        </p>
+                        <a href="https://learn.eltngl.com" target="_blank" class="inline-flex items-center gap-1.5 text-xs font-semibold text-cm-blue bg-yellow-100 hover:bg-yellow-200 px-3 py-1.5 rounded-md transition">
+                            https://learn.eltngl.com
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 7: CONTENTS (DESGLOSADOS POR UNIDADES CON PÁGINAS ESPECÍFICAS) -->
+        <section id="tab-7" class="tab-content space-y-6">
+            <div class="bg-white rounded-xl p-6 sm:p-8 border-l-8 border-cm-blue card-shadow">
+                <div class="flex flex-wrap justify-between items-center mb-6 border-b border-gray-200 pb-2">
+                    <h2 class="text-2xl font-bold text-cm-blue">
+                        <span class="italic-title">VII) Course Contents Breakdown</span>
+                    </h2>
+                    <span class="text-xs font-bold text-cm-blue bg-cm-yellow px-3 py-1 rounded-full"><span class="italic-title">Academic Year 2027</span></span>
+                </div>
+
+                <div class="space-y-8">
+                    
+                    <!-- UNIT 1 -->
+                    <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                        <div class="bg-cm-blue text-white px-5 py-3 font-bold text-base flex justify-between items-center">
+                            <span><span class="italic-title">UNIT I</span></span>
+                            <span class="text-xs font-normal bg-blue-900 px-2.5 py-1 rounded-md text-blue-100"><span class="italic-title">Term 1</span></span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-blue-50 text-cm-blue border-b border-gray-200">
+                                        <th class="p-3.5 font-bold"><span class="italic-title">Topic / Content Title</span></th>
+                                        <th class="p-3.5 font-bold text-center w-36"><span class="italic-title">Student's Book (SB)</span></th>
+                                        <th class="p-3.5 font-bold text-center w-36"><span class="italic-title">Workbook (WB)</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 text-gray-700">
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">Paper Art</span></td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 20, 21, 22</td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">Mexican Yarn Paintings</span></td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 12, 13, 14</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">Snow Animals</span></td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 36, 37, 38</td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">Hats</span></td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 24, 25, 26</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">Amazing Playgrounds</span></td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 52, 53, 54</td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">The X Games</span></td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 36, 37, 38</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50 bg-yellow-50/40">
+                                        <td class="p-3.5 font-medium text-cm-blue"><span class="italic-title">Extended Reading: A Son for Geppetto</span></td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-blue">Pages 58, 59</td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- UNIT 2 -->
+                    <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                        <div class="bg-cm-blue text-white px-5 py-3 font-bold text-base flex justify-between items-center">
+                            <span><span class="italic-title">UNIT II</span></span>
+                            <span class="text-xs font-normal bg-blue-900 px-2.5 py-1 rounded-md text-blue-100"><span class="italic-title">Term 2</span></span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-blue-50 text-cm-blue border-b border-gray-200">
+                                        <th class="p-3.5 font-bold"><span class="italic-title">Topic / Content Title</span></th>
+                                        <th class="p-3.5 font-bold text-center w-36"><span class="italic-title">Student's Book (SB)</span></th>
+                                        <th class="p-3.5 font-bold text-center w-36"><span class="italic-title">Workbook (WB)</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 text-gray-700">
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">Fun Houses</span></td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 72, 73, 74</td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">Welcome to Our Houses</span></td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 50, 51, 52</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">A Day in the Space Station</span></td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 88, 89, 90</td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">Dog Helps the Planet</span></td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 62, 63, 64</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- UNIT 3 -->
+                    <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                        <div class="bg-cm-blue text-white px-5 py-3 font-bold text-base flex justify-between items-center">
+                            <span><span class="italic-title">UNIT III</span></span>
+                            <span class="text-xs font-normal bg-blue-900 px-2.5 py-1 rounded-md text-blue-100"><span class="italic-title">Term 3</span></span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-blue-50 text-cm-blue border-b border-gray-200">
+                                        <th class="p-3.5 font-bold"><span class="italic-title">Topic / Content Title</span></th>
+                                        <th class="p-3.5 font-bold text-center w-36"><span class="italic-title">Student's Book (SB)</span></th>
+                                        <th class="p-3.5 font-bold text-center w-36"><span class="italic-title">Workbook (WB)</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 text-gray-700">
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">Fabulous Faces</span></td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 104, 105, 106</td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">Magic</span></td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 74, 75, 76</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50 bg-yellow-50/40">
+                                        <td class="p-3.5 font-medium text-cm-blue"><span class="italic-title">Extended Reading: Coyote Brings Fire</span></td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-blue">Pages 110, 111</td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">Two Big Birds</span></td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 124, 125, 126</td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">Camels Are Cool!</span></td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 88, 89, 90</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- UNIT 4 -->
+                    <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                        <div class="bg-cm-blue text-white px-5 py-3 font-bold text-base flex justify-between items-center">
+                            <span><span class="italic-title">UNIT IV</span></span>
+                            <span class="text-xs font-normal bg-blue-900 px-2.5 py-1 rounded-md text-blue-100"><span class="italic-title">Term 4</span></span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-blue-50 text-cm-blue border-b border-gray-200">
+                                        <th class="p-3.5 font-bold"><span class="italic-title">Topic / Content Title</span></th>
+                                        <th class="p-3.5 font-bold text-center w-36"><span class="italic-title">Student's Book (SB)</span></th>
+                                        <th class="p-3.5 font-bold text-center w-36"><span class="italic-title">Workbook (WB)</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 text-gray-700">
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">Wonderful Work!</span></td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 140, 141, 142</td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">The Dog Whisperer</span></td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 100, 101, 102</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">Super Snacks</span></td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 156, 157, 158</td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3.5 font-medium"><span class="italic-title">Super Foods</span></td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-secondary">Pages 112, 113, 114</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50 bg-yellow-50/40">
+                                        <td class="p-3.5 font-medium text-cm-blue"><span class="italic-title">Extended Reading: Grevy's Zebras</span></td>
+                                        <td class="p-3.5 text-center font-semibold text-cm-blue">Pages 162, 163</td>
+                                        <td class="p-3.5 text-center text-gray-400">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-cm-blue text-white py-4 mt-8 border-t-4 border-cm-yellow">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-blue-200">
+            <p><span class="italic-title">Colegio Montano Cortijo - Desarrollamos competencias para triunfar</span></p>
+            <p class="mt-1 opacity-75"><span class="italic-title">Interactive Digital Board System - Academic Year 2027</span></p>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE DASHBOARD JAVASCRIPT LOGIC -->
+    <script>
+        // Tab Switcher Functionality
+        function switchTab(tabId) {
+            // Hide all tab content
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Deactivate all tab buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Activate selected tab content & button
+            const targetContent = document.getElementById(tabId);
+            const targetBtn = document.getElementById('btn-' + tabId);
+
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+            if (targetBtn) {
+                targetBtn.classList.add('active');
+            }
+        }
+
+        // Full Screen Toggle Logic
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log('Error attempting to enable fullscreen:', err.message);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
